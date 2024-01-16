@@ -1,6 +1,6 @@
 [project]
 name = "datasette-test"
-version = "0.1"
+version = "0.1.1"
 description = "Utilities to help write tests for Datasette plugins and applications"
 readme = "README.md"
 requires-python = ">=3.8"
