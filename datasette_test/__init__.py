@@ -1,4 +1,7 @@
 from datasette.app import Datasette as _Datasette
+import time
+import httpx
+
 
 try:
     from datasette.utils import fail_if_plugins_in_metadata
@@ -29,3 +32,14 @@ class Datasette(_Datasette):
             kwargs["config"] = kwargs.get("config") or {}
             kwargs["config"]["plugins"] = plugin_config
         super().__init__(*args, **kwargs)
+
+
+def wait_until_responds(url: str, timeout: float = 5.0):
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            httpx.get(url)
+            return
+        except httpx.ConnectError:
+            time.sleep(0.1)
+    raise AssertionError("Timed out waiting for {} to respond".format(url))

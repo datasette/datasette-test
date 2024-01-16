@@ -33,6 +33,21 @@ This subclass detects if the underlying plugin needs configuration in metadata o
 
 You can also use this class while continuing to pass `metadata={"plugins": ...}` - the class will move that configuration to config when necessary.
 
+## wait_until_responds(url, timeout=5.0)
+
+Some Datasette plugin test suites launch a Datasette server and then need to wait for that server to become available before continuing.
+
+Call this function to wait until the server becomes available, or raise an error if it takes longer than the timeout:
+
+```python
+from datasette_test import wait_until_responds
+
+def test_server():
+    # ... start server ...
+    wait_until_responds("http://localhost:8001")
+    # Now run tests
+```
+
 ## Development
 
 To contribute to this library, first checkout the code. Then create a new virtual environment:
