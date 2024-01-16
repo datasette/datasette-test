@@ -10,7 +10,7 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License"
 ]
 dependencies = [
-
+    "datasette"
 ]
 
 [project.urls]
@@ -19,6 +19,5 @@ Changelog = "https://github.com/datasette/datasette-test/releases"
 Issues = "https://github.com/datasette/datasette-test/issues"
 CI = "https://github.com/datasette/datasette-test/actions"
 
-
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest", "pytest-asyncio"]
