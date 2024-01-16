@@ -1,8 +1,9 @@
 name: Test
 
-on:
-  push:
-  workflow_dispatch:
+on: [push, pull_request]
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -12,16 +13,16 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         datasette-version: ["datasette<=1.0a0", "datasette>=1.0a0", "https://codeload.github.com/simonw/datasette/zip/7a5adb592ae6674a2058639c66e85eb1b49448fb"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         cache: pip
-        cache-dependency-path: '**/pyproject.toml'
+        cache-dependency-path: pyproject.toml
     - name: Install dependencies
       run: |
-        pip install -e '.[test]'
+        pip install '.[test]'
         pip install '${{ matrix.datasette-version }}'
     - name: Run tests
       run: |
