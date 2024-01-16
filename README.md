@@ -10,25 +10,42 @@ Utilities to help write tests for Datasette plugins and applications
 ## Installation
 
 Install this library using `pip`:
+```bash
+pip install datasette-test
+```
+## Tests that use plugin configuration
 
-    pip install datasette-test
+Datasette 1.0a8 enforced a configuration change where plugins are no longer configured in metadata, but instead use a configuration file.
 
-## Usage
+This can result in test failures in projects that use the `Datasette(metadata={"plugins": {"...": "..."}})` pattern to test out plugin configuration.
 
-Usage instructions go here.
+You can solve this using `datasette_test.Datasette`, a subclass that works with Datasette versions both before and after this breaking change:
+
+```python
+from datasette_test import Datasette
+import pytest
+
+@pytest.mark.asyncio
+async def test_datasette():
+    ds = Datasette(plugin_config={"my-plugin": {"config": "goes here"})
+```
+This subclass detects if the underlying plugin needs configuration in metadata or config and instantiates the class correctly either way.
+
+You can also use this class while continuing to pass `metadata={"plugins": ...}` - the class will move that configuration to config when necessary.
 
 ## Development
 
 To contribute to this library, first checkout the code. Then create a new virtual environment:
-
-    cd datasette-test
-    python -m venv venv
-    source venv/bin/activate
-
+```bash
+cd datasette-test
+python -m venv venv
+source venv/bin/activate
+```
 Now install the dependencies and test dependencies:
-
-    pip install -e '.[test]'
-
+```bash
+pip install -e '.[test]'
+```
 To run the tests:
-
-    pytest
+```bash
+pytest
+```
