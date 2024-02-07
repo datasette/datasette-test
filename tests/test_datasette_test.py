@@ -14,14 +14,21 @@ import pytest
 async def test_datasette_plugin_config(kwargs):
     ds = Datasette()
     response = await ds.client.get("/-/metadata.json")
+    response2 = await ds.client.get("/-/config.json")
     assert response.json() == {}
+    assert response2.json() == {}
 
+    # Now configure it
     ds = Datasette(**kwargs)
-    response2 = await ds.client.get("/-/metadata.json")
     if plugin_config_should_be_in_metadata:
-        assert response2.json() == {"plugins": {"foo": "bar"}}
+        response3 = await ds.client.get("/-/metadata.json")
+        assert response3.json() == {"plugins": {"foo": "bar"}}
     else:
-        assert response2.json() == {}
+        # Should be in /-/config.json and not /-/metadata.json
+        response4 = await ds.client.get("/-/metadata.json")
+        response5 = await ds.client.get("/-/config.json")
+        assert response4.json() == {}
+        assert response5.json() == {"plugins": {"foo": "bar"}}
 
 
 def test_wait_until_responds():

@@ -1,14 +1,10 @@
 from datasette.app import Datasette as _Datasette
+from datasette.version import __version_info__
 import time
 import httpx
 
 
-try:
-    from datasette.utils import fail_if_plugins_in_metadata
-
-    plugin_config_should_be_in_metadata = False
-except ImportError:
-    plugin_config_should_be_in_metadata = True
+plugin_config_should_be_in_metadata = __version_info__ < ("1", "0a8")
 
 
 class Datasette(_Datasette):
