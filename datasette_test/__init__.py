@@ -1,10 +1,11 @@
 from datasette.app import Datasette as _Datasette
-from datasette.version import __version_info__
+from datasette.version import __version__
+from packaging.version import parse
 import time
 import httpx
 
 
-plugin_config_should_be_in_metadata = __version_info__ < ("1", "0a8")
+plugin_config_should_be_in_metadata = parse(__version__) < parse("1.0a8")
 
 
 class Datasette(_Datasette):
@@ -27,6 +28,16 @@ class Datasette(_Datasette):
             plugin_config = kwargs["metadata"].pop("plugins")
             kwargs["config"] = kwargs.get("config") or {}
             kwargs["config"]["plugins"] = plugin_config
+        permissions = kwargs.pop("permissions", None)
+        if permissions:
+            if plugin_config_should_be_in_metadata:
+                # Stash these to be handled by our special plugin
+                self._special_test_permissions = permissions
+            else:
+                # Put it in config
+                if "config" not in kwargs:
+                    kwargs["config"] = {}
+                kwargs["config"]["permissions"] = permissions
         super().__init__(*args, **kwargs)
 
 

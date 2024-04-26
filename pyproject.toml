@@ -11,7 +11,8 @@ classifiers = [
 ]
 dependencies = [
     "datasette",
-    "httpx"
+    "httpx",
+    "packaging"
 ]
 
 [project.urls]
@@ -19,6 +20,9 @@ Homepage = "https://github.com/datasette/datasette-test"
 Changelog = "https://github.com/datasette/datasette-test/releases"
 Issues = "https://github.com/datasette/datasette-test/issues"
 CI = "https://github.com/datasette/datasette-test/actions"
+
+[project.entry-points.datasette]
+datasette_test = "datasette_test.plugin"
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-asyncio"]

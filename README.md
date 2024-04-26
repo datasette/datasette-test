@@ -33,6 +33,18 @@ This subclass detects if the underlying plugin needs configuration in metadata o
 
 You can also use this class while continuing to pass `metadata={"plugins": ...}` - the class will move that configuration to config when necessary.
 
+## permissions= convenience argument
+
+Datasette 1.0a introduces a [more convenient way](https://docs.datasette.io/en/1.0a13/authentication.html#other-permissions-in-datasette-yaml) of defining permissions directly in the configuration:
+```python
+ds = Datasette(config={"permissions": {"view-instance": {"id": "root"}}})
+```
+This is not supported by Datasette pre 1.0 - but you can use the `permissions=` argument in `datasette_test.Datasette` to achieve the same effect:
+```python
+ds = Datasette(permissions={"view-instance": {"id": "root"}})
+```
+This will work across both major Datasette versions.
+
 ## wait_until_responds(url, timeout=5.0)
 
 Some Datasette plugin test suites launch a Datasette server and then need to wait for that server to become available before continuing.

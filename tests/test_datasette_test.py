@@ -1,5 +1,6 @@
 from datasette_test import (
     Datasette,
+    actor_cookie,
     plugin_config_should_be_in_metadata,
     wait_until_responds,
 )
@@ -34,3 +35,14 @@ async def test_datasette_plugin_config(kwargs):
 
 def test_wait_until_responds():
     wait_until_responds("https://www.example.com/")
+
+
+@pytest.mark.asyncio
+async def test_permissions():
+    ds = Datasette(permissions={"view-instance": {"id": "root"}})
+    response = await ds.client.get("/")
+    assert response.status_code == 403
+    response = await ds.client.get(
+        "/", cookies={"ds_actor": actor_cookie(ds, {"id": "root"})}
+    )
+    assert response.status_code == 200
