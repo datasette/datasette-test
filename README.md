@@ -48,6 +48,22 @@ def test_server():
     # Now run tests
 ```
 
+## actor_cookie(datasette, actor)
+
+Equivalent to `datasette.client.actor_cookie()` in Datasette 1.0a+. Example usage:
+
+```python
+@pytest.mark.asyncio
+async def test_permissions():
+    ds = Datasette(permissions={"view-instance": {"id": "root"}})
+    response = await ds.client.get("/")
+    assert response.status_code == 403
+    response = await ds.client.get(
+        "/", cookies={"ds_actor": actor_cookie(ds, {"id": "root"})}
+    )
+    assert response.status_code == 200
+```
+
 ## Development
 
 To contribute to this library, first checkout the code. Then create a new virtual environment:

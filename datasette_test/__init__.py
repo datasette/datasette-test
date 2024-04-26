@@ -39,3 +39,10 @@ def wait_until_responds(url: str, timeout: float = 5.0):
         except httpx.ConnectError:
             time.sleep(0.1)
     raise AssertionError("Timed out waiting for {} to respond".format(url))
+
+
+def actor_cookie(datasette, actor):
+    if hasattr(datasette.client, "actor_cookie"):
+        return datasette.client.actor_cookie({"id": "root"})
+    else:
+        return datasette.sign({"a": actor}, "actor")
