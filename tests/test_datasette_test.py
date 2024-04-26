@@ -46,3 +46,12 @@ async def test_permissions():
         "/", cookies={"ds_actor": actor_cookie(ds, {"id": "root"})}
     )
     assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("actor_id", ("root", "admin"))
+async def test_actor_cookie(actor_id):
+    ds = Datasette()
+    cookie = actor_cookie(ds, {"id": actor_id})
+    decoded = ds.unsign(cookie, "actor")
+    assert decoded == {"a": {"id": actor_id}}

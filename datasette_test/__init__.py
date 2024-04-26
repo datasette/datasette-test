@@ -54,6 +54,6 @@ def wait_until_responds(url: str, timeout: float = 5.0):
 
 def actor_cookie(datasette, actor):
     if hasattr(datasette.client, "actor_cookie"):
-        return datasette.client.actor_cookie({"id": "root"})
+        return datasette.client.actor_cookie(actor)
     else:
         return datasette.sign({"a": actor}, "actor")
